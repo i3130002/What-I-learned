@@ -1,0 +1,62 @@
+
+GUID: 
+http://docs.micropython.org/en/latest/esp8266/tutorial/intro.html#deploying-the-firmware
+
+Need:
+pip install esptool
+
+
+Download Firmware:
+https://micropython.org/download#esp8266
+
+Using esptool.py you can erase the flash with the command:
+esptool --port com3 erase_flash
+
+And then deploy the new firmware using:
+esptool --port com3  --baud 115200 write_flash --flash_size=detect 0 esp8266-20170108-v1.8.7.bin
+
+1.6. WiFi
+http://docs.micropython.org/en/latest/esp8266/tutorial/intro.html#wifi
+After a fresh install and boot the device configures itself as a WiFi access point (AP) that you can connect to. The ESSID is of the form MicroPython-xxxxxx where the x’s are replaced with part of the MAC address of your device (so will be the same everytime, and most likely different for all ESP8266 chips). The password for the WiFi is micropythoN (note the upper-case N). Its IP address will be 192.168.4.1 once you connect to its network. WiFi configuration will be discussed in more detail later in the tutorial.
+
+1.5. Serial prompt
+connect MicroUSB > Open Putty software (or other serial interfaces)> serial > COM3, 115200
+
+4.1. Configuration of the WiFi
+http://docs.micropython.org/en/latest/esp8266/tutorial/network_basics.html#configuration-of-the-wifi
+import network
+sta_if = network.WLAN(network.STA_IF)
+sta_if.active(True)
+sta_if.connect('<your ESSID>', '<your password>')
+sta_if.isconnected()
+
+
+2.1. REPL over the serial port
+http://docs.micropython.org/en/latest/esp8266/tutorial/repl.html#repl-over-the-serial-port
+The REPL is always available on the UART0 serial peripheral, which is connected to the pins GPIO1 for TX and GPIO3 for RX. The baudrate of the REPL is 115200. If your board has a USB-serial convertor on it then you should be able to access the REPL directly from your PC. Otherwise you will need to have a way of communicating with the UART.
+To access the prompt over USB-serial you need to use a terminal emulator program. On Windows TeraTerm is a good choice, on Mac you can use the built-in screen program, and Linux has picocom and minicom. Of course, there are many other terminal programs that will work, so pick your favourite!
+For example, on Linux you can try running:
+picocom /dev/ttyUSB0 -b115200
+Once you have made the connection over the serial port you can test if it is working by hitting enter a few times. You should see the Python REPL prompt, indicated by >>>.
+
+Connect using WebREPL 
+2.2. WebREPL - a prompt over WiFi
+WebREPL allows you to use the Python prompt over WiFi, connecting through a browser. The latest versions of Firefox and Chrome are supported.
+
+For your convenience, WebREPL client is hosted at http://micropython.org/webrepl . Alternatively, you can install it locally from the the GitHub repository https://github.com/micropython/webrepl .
+
+Before connecting to WebREPL, you should set a password and enable it via a normal serial connection. Initial versions of MicroPython for ESP8266 came with WebREPL automatically enabled on the boot and with the ability to set a password via WiFi on the first connection, but as WebREPL was becoming more widely known and popular, the initial setup has switched to a wired connection for improved security:
+
+******************************
+import webrepl_setup
+
+Follow the on-screen instructions and prompts. To make any changes active, you will need to reboot your device.
+
+To use WebREPL connect your computer to the ESP8266’s access point (MicroPython-xxxxxx, see the previous section about this). If you have already reconfigured your ESP8266 to connect to a router then you can skip this part.
+
+Once you are on the same network as the ESP8266 you click the “Connect” button (if you are connecting via a router then you may need to change the IP address, by default the IP address is correct when connected to the ESP8266’s access point). If the connection succeeds then you should see a password prompt.
+
+Once you type the password configured at the setup step above, press Enter once more and you should get a prompt looking like >>>. You can now start typing Python commands!
+
+Example IP address:
+ws://192.168.1.106:8266/
